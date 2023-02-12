@@ -10,9 +10,9 @@ function UserComponets() {
     <div>
       <BrowserRouter>
 <Routes>
- <Route exact  path="/"  element={<Login/>}></Route>
+ <Route exact  path="/"  element={<Home></Home>}></Route>
  <Route path="/signup" element={<Signup />}></Route>
- <Route path="/home" element={<Home/>}></Route>
+ <Route path="/login" element={<Login/>}></Route>
 </Routes>
 </BrowserRouter>
     </div>
