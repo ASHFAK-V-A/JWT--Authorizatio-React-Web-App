@@ -10,31 +10,35 @@ console.log("oinside");
 
 
 export const Signup= async(req,res)=>{
+    try{
+
 const { errors, isValid } = validateRegisterInput(req.body);
+const {name,email,password}= req.body
+console.log(name,email,password);
 
-
+const UserData= await User.findOne({email:email})
 if(!isValid) {
     return res.status(400).json(errors);
 }
 
-User.findOne({
-    email: req.body.email
-}).then(user => {
-    if(user) {
-        return res.status(400).json({
-            email: 'Email already exists'
-        });
+if(UserData){
+ return res.status(400).json({email:'Email already exists'}).console.log('userfound');;
+ 
+}else{
+    const hash = await bcrypt.hash(password, 10)
+     const newUser = new User({
+        name,
+        email,
+        password:hash
+    })
+
+     newUser.save().then(user=>{
+    return res.json(user)
+  })
+
+}
+    }catch(err){
+        console.log(err.message);
     }
-})
-
-const hashpsw = await bcrypt.hash(req.body.password,10)
-const newUser= await User.create({
-    name: req.body.name,          
-  email: req.body.email,
-password: hashpsw
-});
-
-console.log(newUser);
-
 
 }

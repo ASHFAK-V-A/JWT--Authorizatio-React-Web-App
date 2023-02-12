@@ -1,8 +1,10 @@
 
 import React, { useState } from 'react';
 import axios from '../../../axios/axios.js';
+import { useNavigate } from 'react-router';
 
 function Signup() {
+const navigate=useNavigate()
 
 const [errors,setErrors] = useState({});
 const [formValues,setFormValues]=useState({
@@ -30,7 +32,8 @@ const [formValues,setFormValues]=useState({
         password_confirm: formValues.password_confirm
         
     }).then((response)=>{
-   console.log(response);
+      console.log(response.data);
+        navigate('/')
     }).catch((error)=>{
       console.log(error.response.data);
       setErrors(error.response.data);
