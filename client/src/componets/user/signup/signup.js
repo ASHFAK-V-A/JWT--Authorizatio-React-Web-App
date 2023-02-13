@@ -33,7 +33,7 @@ const [formValues,setFormValues]=useState({
         
     }).then((response)=>{
       console.log(response.data);
-        navigate('/')
+        navigate('/login')
     }).catch((error)=>{
       console.log(error.response.data);
       setErrors(error.response.data);

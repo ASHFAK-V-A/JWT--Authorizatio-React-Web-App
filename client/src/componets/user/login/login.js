@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Link} from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../../axios/axios'
 
 
 
@@ -11,22 +11,31 @@ import axios from 'axios';
 
 function Login() {
 
-
-const [email,setEmail]=useState('')
-const [password,setPassword]=useState('')
+  const [errors,setErrors] = useState({});
+  const [loginform,setloginform]= useState({
+    email:"",
+    password:""
+  })
 
   const onChangeHandle = (e) => {
-
+    const { name, value } = e.target;
+    setloginform({...loginform,[name]:value})
 };
 
-const handleSubmit = (event) => {
+console.log(loginform);
+
+const handleSubmit =async (event) => {
   event.preventDefault();
 
-  axios.post('/login',{
-    email,
-    password
+ await axios.post('/login',{
+    email:loginform.email,
+    password:loginform.password
   }).then((response)=>{
 console.log(response);
+  }).catch((error)=>{
+    console.log(error.response.data);
+    setErrors(error.response.data);
+    
   })
 }
   return (
@@ -41,23 +50,26 @@ console.log(response);
             <h3 className="mb-5">login</h3>
 
             <div className="form-outline mb-4">
-            <label className="form-label float-start" for="typeEmailX-2">Email</label>
+            <label className="form-label float-start">Email</label>
               <input type="email"
                id="typeEmailX-2" 
                className="form-control form-control-lg" 
                  onChange={onChangeHandle}
-                 value={email}/>
+                 value={loginform.email} 
+                  name="email"/>
+                   {errors && <p style={{color:"red"}}>{errors.email}</p>}
             </div>
 
             <div className="form-outline mb-4">
-            <label className="form-label float-start" for="typePasswordX-2">Password</label>
+            <label className="form-label float-start">Password</label>
               <input
                type="password" 
                id="typePasswordX-2"
               className="form-control form-control-lg"
               onChange={onChangeHandle}
-              value={password}
-                 />
+              value={loginform.password}
+                name="password" />
+           {errors && <p style={{color:"red"}}>{errors.password}</p>}
             </div>
 
         
@@ -66,7 +78,7 @@ console.log(response);
                className="form-check-input"
                 type="checkbox"
                 id="form1Example3" />
-              <label className="form-check-label" for="form1Example3"> <span className='ms-2'> Remember password  </span></label>
+              <label className="form-check-label" > <span className='ms-2'> Remember password  </span></label>
             </div>
 
             <button className="btn btn-primary btn-lg btn-block mb-3" type="submit">Login</button>

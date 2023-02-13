@@ -1,13 +1,50 @@
 import User from "../models/UserSchema.js";
 import validateRegisterInput from '../validatioin/register.js'
+import validateLoginInput from '../validatioin/login.js'
 import bcrypt from 'bcrypt'
-export const LoginUser=(req,res)=>{
-const data = req.body
-console.log(data);
-console.log("oinside");
-   
-}   
+import generateToken from "../utils/utils.js";
 
+export const LoginUser= async(req,res)=>{
+
+try{
+const { errors, isValid } = validateLoginInput(req.body);
+const {email,password}= req.body
+
+if(!isValid) {
+    return res.status(400).json(errors);
+}
+
+
+User.findOne({email:email}).then((user)=>{
+    if(!user){
+        errors.email = 'User not found'
+        return res.status(404).json(errors);
+    }
+    bcrypt.compare(password,user.password).then((isMatch)=>{
+        if(isMatch){
+ 
+            const payload={
+                id:user.id,
+                name:user.name
+            }
+
+        let token = generateToken(payload)
+        
+        console.log(token);
+        }else{
+            errors.password = 'Incorrect Password';
+            return res.status(400).json(errors);
+        }
+    })
+})
+
+
+
+}catch(err){
+    console.log(err.message);
+
+}   
+}
 
 export const Signup= async(req,res)=>{
     try{
