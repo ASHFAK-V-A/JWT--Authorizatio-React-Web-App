@@ -1,9 +1,21 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Navbar, Nav, Button } from "react-bootstrap";
+import { useSelector } from 'react-redux';
+
+function Home() {
+
+const auth=useSelector((state)=>state);
 
 
-function home() {
+let userNmae
+
+if(auth.token.name){
+userNmae=auth.token.name
+}else{
+  userNmae="login"
+}
+
   return (
     <div>
 
@@ -15,7 +27,7 @@ function home() {
     </div>
     <ul className="nav navbar-nav navbar-right">
       <Button>
-              <li><a  ><span className="glyphicon glyphicon-log-in text-white">Login </span> </a></li>
+              <li><a  ><span className="glyphicon glyphicon-log-in text-white">{`${userNmae}`}</span> </a></li>
         </Button>
     </ul>
   </div>
@@ -36,4 +48,4 @@ function home() {
   )
 }
 
-export default home
+export default Home

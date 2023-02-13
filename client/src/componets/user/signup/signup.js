@@ -2,9 +2,13 @@
 import React, { useState } from 'react';
 import axios from '../../../axios/axios.js';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 function Signup() {
 const navigate=useNavigate()
+const auth = useSelector((state)=>state)
+
+console.log("this is sata",auth);
 
 const [errors,setErrors] = useState({});
 const [formValues,setFormValues]=useState({

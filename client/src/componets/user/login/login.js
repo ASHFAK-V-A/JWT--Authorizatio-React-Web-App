@@ -1,15 +1,29 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Link} from 'react-router-dom';
 import axios from '../../../axios/axios'
-
-
-
+import { useSelector ,useDispatch} from 'react-redux';
+import {bindActionCreators} from 'redux'
+import {actionCreators} from '../../../state/index'
+import { useNavigate } from 'react-router';
 
 
 
 function Login() {
+
+
+
+  const auth = useSelector((state)=>state)
+  
+  console.log(auth);
+  const navigate = useNavigate();
+  const dispatch=useDispatch()
+
+  const {storeToken} = bindActionCreators(actionCreators,dispatch);
+
+
+
 
   const [errors,setErrors] = useState({});
   const [loginform,setloginform]= useState({
@@ -22,7 +36,6 @@ function Login() {
     setloginform({...loginform,[name]:value})
 };
 
-console.log(loginform);
 
 const handleSubmit =async (event) => {
   event.preventDefault();
@@ -30,14 +43,24 @@ const handleSubmit =async (event) => {
  await axios.post('/login',{
     email:loginform.email,
     password:loginform.password
-  }).then((response)=>{
-console.log(response.data.token);
+  }).then(async(response)=>{
+    console.log(response.data.name);
+    const data ={
+      token:response.data.token,
+      id:response.data.id,
+      name:response.data.name
+  }
+ 
+storeToken(data);
+  navigate('/');
   }).catch((error)=>{
-    console.log(error.response.data);
+    console.log(error);
     setErrors(error.response.data);
     
   })
+
 }
+
   return (
 <section className="vh-100">
   <form onSubmit={handleSubmit}>

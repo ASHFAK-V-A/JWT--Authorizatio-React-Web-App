@@ -22,6 +22,7 @@ User.findOne({email:email}).then((user)=>{
     }
     bcrypt.compare(password,user.password).then((isMatch)=>{
         if(isMatch){
+          
             const payload={
                 id:user.id,
                 name:user.name
@@ -30,10 +31,13 @@ User.findOne({email:email}).then((user)=>{
             jwt.sign(payload, process.env.JWT_SECRECT,{
                 expiresIn: 3600
             }, (err, token) => {
+              
                 if(err) console.error('There is some error in token', err);
                 else {
                     res.json({
                         success: true,
+                        id:user.id,
+                        name:user.name,
                         token: `Bearer ${token}`
                     });
                 }
