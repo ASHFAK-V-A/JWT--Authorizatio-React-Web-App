@@ -2,7 +2,7 @@ import User from "../models/UserSchema.js";
 import validateRegisterInput from '../validatioin/register.js'
 import validateLoginInput from '../validatioin/login.js'
 import bcrypt from 'bcrypt'
-import generateToken from "../utils/utils.js";
+import jwt from 'jsonwebtoken'
 
 export const LoginUser= async(req,res)=>{
 
@@ -22,15 +22,23 @@ User.findOne({email:email}).then((user)=>{
     }
     bcrypt.compare(password,user.password).then((isMatch)=>{
         if(isMatch){
- 
             const payload={
                 id:user.id,
                 name:user.name
             }
 
-        let token = generateToken(payload)
-        
-        console.log(token);
+            jwt.sign(payload, process.env.JWT_SECRECT,{
+                expiresIn: 3600
+            }, (err, token) => {
+                if(err) console.error('There is some error in token', err);
+                else {
+                    res.json({
+                        success: true,
+                        token: `Bearer ${token}`
+                    });
+                }
+            })
+            
         }else{
             errors.password = 'Incorrect Password';
             return res.status(400).json(errors);

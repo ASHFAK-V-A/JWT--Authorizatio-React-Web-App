@@ -31,7 +31,7 @@ const handleSubmit =async (event) => {
     email:loginform.email,
     password:loginform.password
   }).then((response)=>{
-console.log(response);
+console.log(response.data.token);
   }).catch((error)=>{
     console.log(error.response.data);
     setErrors(error.response.data);
