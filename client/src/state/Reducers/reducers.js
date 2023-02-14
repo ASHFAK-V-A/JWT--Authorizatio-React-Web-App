@@ -9,8 +9,9 @@ const tokenReducers=(prevState=initialState,action)=>{
             return {
                 ...prevState,
                 token: action.token,
-                id: action.id,
-                name:action.name
+                id: action?.id,
+                name:action?.name,
+                email:action?.email
             }
 
             case "removeToken":

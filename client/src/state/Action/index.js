@@ -3,8 +3,9 @@ export const storeToken=(data)=>{
         dispatch({
             type:'storeToken',
             token:data.token,
-            id:data.id,
-            name:data.name
+            id:data?.id,
+            name:data?.name,
+            email:data?.email
         })
     }
 }

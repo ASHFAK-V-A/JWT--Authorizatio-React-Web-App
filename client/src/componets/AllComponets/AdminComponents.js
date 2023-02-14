@@ -9,7 +9,7 @@ function AdminComponents() {
     <BrowserRouter>
 <Routes>
 <Route exact  path="/admin"  element={<Login/>}></Route>
-<Route   path="admin/home"  element={<Landingpage/>}></Route>
+<Route   path="/admin/home"  element={<Landingpage/>}></Route>
 
     </Routes>
     </BrowserRouter>

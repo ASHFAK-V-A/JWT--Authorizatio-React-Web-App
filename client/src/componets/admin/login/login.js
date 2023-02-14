@@ -1,11 +1,76 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { useState } from 'react'
+import axios from '../../../axios/axios'
+import { useNavigate } from 'react-router';
+import {bindActionCreators} from 'redux'
+import {actionCreators} from '../../../state/index'
+import { useSelector ,useDispatch} from 'react-redux';
 
 function Login() {
+
+
+
+
+    const auth = useSelector((state)=>state)
+
+    console.log("this is auth",auth);
+ const dispatch=useDispatch()
+const navigate = useNavigate()
+
+ const {storeToken} = bindActionCreators(actionCreators,dispatch);
+
+
+
+
+const [errors,setErrors] = useState({});
+const [adminauth,setAdminAuth]=useState(
+    {
+        email:"",
+        password:""
+    }
+)
+
+const onChangeHandler=((e)=>{
+    const { name, value } = e.target;
+    setAdminAuth({...adminauth,[name]:value})
+})
+const SubmitHandler=(async(e)=>{
+    e.preventDefault();
+  await axios.post('/admin',{
+    email:adminauth.email,
+    password:adminauth.password 
+  }).then(async(response)=>{
+    const data ={
+        token:response.data.token,
+        email:response.data.email
+    }
+    localStorage.setItem('token', response.data.token);
+
+
+    
+
+
+
+
+storeToken(data);
+    navigate('/admin/home');
+
+  }).catch((error)=>{
+    console.log(error);
+    setErrors(error.response);
+    
+  })
+
+ 
+   
+})
+
+
   return (
    
 <section className="vh-100">
-  <form >
+  <form onSubmit={SubmitHandler}>
   <div className="container py-5 h-100">
     <div className="row d-flex justify-content-center align-items-center h-100">
       <div className="col-12 col-md-8 col-lg-6 col-xl-5">
@@ -19,9 +84,10 @@ function Login() {
               <input type="email"
                id="typeEmailX-2" 
                className="form-control form-control-lg" 
-    
+               onChange={onChangeHandler}
+               value={adminauth.email}
                   name="email"/>
-      
+                   {errors && <p style={{color:"red"}}>{errors.email}</p>}
             </div>
 
             <div className="form-outline mb-4">
@@ -30,9 +96,10 @@ function Login() {
                type="password" 
                id="typePasswordX-2"
               className="form-control form-control-lg"
-          
+              onChange={onChangeHandler}
+              value={adminauth.password}
                 name="password" />
-       
+                    {errors && <p style={{color:"red"}}>{errors.password}</p>}
             </div>
 
         
