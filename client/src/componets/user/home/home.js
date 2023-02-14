@@ -1,20 +1,42 @@
 import React from 'react'
+import { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Navbar, Nav, Button } from "react-bootstrap";
 import { useSelector } from 'react-redux';
-
+import { useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { useNavigate } from "react-router-dom";
+import {actionCreators} from '../../../state/index'
 function Home() {
 
-const auth=useSelector((state)=>state);
-
+  const auth = useSelector(state => state);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { removeToken } = bindActionCreators(actionCreators, dispatch);
 
 let userNmae
 
 if(auth.token.name){
-userNmae=auth.token.name
+userNmae="Logout"
 }else{
   userNmae="login"
 }
+
+
+const LogoutHandler= () => {
+  const data = {
+    token: auth.token,
+    id: auth.id
+  }
+  console.log(data);
+  removeToken(data);
+  navigate('/login');
+}
+useEffect(() => {
+  if (auth.token.token === '') {
+    navigate('/login');
+  }
+}, [])
 
   return (
     <div>
@@ -27,7 +49,8 @@ userNmae=auth.token.name
     </div>
     <ul className="nav navbar-nav navbar-right">
       <Button>
-              <li><a  ><span className="glyphicon glyphicon-log-in text-white">{`${userNmae}`}</span> </a></li>
+              <li><span onClick={LogoutHandler} className="glyphicon glyphicon-log-in text-white">{`${userNmae}`}</span></li>
+          
         </Button>
     </ul>
   </div>

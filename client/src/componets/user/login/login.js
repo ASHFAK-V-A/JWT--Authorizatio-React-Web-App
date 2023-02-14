@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState,useEffect } from 'react';
+import { useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Link} from 'react-router-dom';
 import axios from '../../../axios/axios'
@@ -15,7 +15,7 @@ function Login() {
 
 
   const auth = useSelector((state)=>state)
-  
+
   console.log(auth);
   const navigate = useNavigate();
   const dispatch=useDispatch()
@@ -59,6 +59,7 @@ storeToken(data);
     
   })
 
+ 
 }
 
   return (
