@@ -21,7 +21,11 @@ required:true
     conformPassword:{
         type:Number,
 
-    }
+    },
+    isBlocked:{
+        type:Boolean,
+        default:false
+    },
 })
 
 const User=mongoose.model('user',userSchema)

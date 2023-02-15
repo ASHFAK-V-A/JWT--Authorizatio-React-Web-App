@@ -7,30 +7,34 @@ import { useNavigate } from 'react-router';
 import axios from '../../../axios/axios.js'
 
 
+
+
+
 function UserManagment() {
   const [users, setUsers] = useState([]);
   const [search,setSearch]=useState('')
   const navigate = useNavigate();
   const auth = useSelector(state => state);
   const [filteredUsers, setFilteredUsers] = useState([]);
-console.log(users);
 
-
+  const [BlockUsered,setBlockUser]=useState(false)
+ const [UnBlockUsers,setUnblockUsers]=useState()
 
 
 if(auth.token.email){
   console.log('authenticated');
-
 }
+
+
+
+
 useEffect(() => {
   if (auth.token.token === '') {
     navigate('/admin');
   }else{
- axios.get('/admin/getUser').then((respose)=>{
+  axios.get('/admin/getUser').then((respose)=>{
 setUsers(respose.data.AllUsers)
-
     })
-
 
   }
 }, [])
@@ -51,7 +55,38 @@ value.name.includes(search)
 
 }
 
-console.log("user",filteredUsers);
+
+const BlockUser=(async(userId)=>{
+  await axios.post(`admin/blockuser/${userId}`).then((response)=>{
+ const blockUser=response.data
+ console.log('user block',blockUser);
+  setBlockUser(blockUser)
+  axios.get('/admin/getUser').then((respose)=>{
+    setUsers(respose.data.AllUsers)
+        })
+
+  })
+
+
+})
+
+const unBlockUser=(async(userId)=>{
+await axios.post(`admin/unblockuser/${userId}`).then((response)=>{
+ 
+const unblock=response.data
+console.log('user unblock',unblock);
+setUnblockUsers(unblock)
+
+axios.get('/admin/getUser').then((respose)=>{
+  setUsers(respose.data.AllUsers)
+      })
+
+})
+})
+
+
+
+
 
 
   return (
@@ -90,8 +125,21 @@ return(
       <td>{obj.name}</td>
       <td>{obj.email}</td>
       <td>{obj._id}</td>
+
       <td><button className='btn btn-primary'>Edit</button></td>
-      <td><button className='btn btn-danger'>Delete</button></td>
+      {obj.isBlocked ===true ?
+      
+      (
+        <td><button onClick={() => unBlockUser(obj._id)} className="btn btn-danger" >unblock</button></td>
+        
+      ):(
+        <td><button onClick={() => BlockUser(obj._id)} className="btn btn-danger" >Block</button></td>
+      )
+      }
+    
+
+   
+     
     </tr>
  
    
