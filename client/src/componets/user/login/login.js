@@ -3,26 +3,23 @@ import { useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Link} from 'react-router-dom';
 import axios from '../../../axios/axios'
-import { useSelector ,useDispatch} from 'react-redux';
-import {bindActionCreators} from 'redux'
-import {actionCreators} from '../../../state/index'
+import { useSelector} from 'react-redux';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
 
+import { storetoken } from '../../../Redux/token/token';
 
 
 function Login() {
 
+const token=useSelector((state)=> state.token)
+const dispatch=useDispatch()
 
-
-  const auth = useSelector((state)=>state)
-
-  console.log(auth);
+console.log('token',token);
   const navigate = useNavigate();
-  const dispatch=useDispatch()
-
-  const {storeToken} = bindActionCreators(actionCreators,dispatch);
 
 
+ 
 
 
   const [errors,setErrors] = useState({});
@@ -37,25 +34,20 @@ function Login() {
 };
 
 
-const handleSubmit =async (event) => {
+const handleSubmit =async(event) => {
   event.preventDefault();
 
- await axios.post('/login',{
+await axios.post('/login',{
     email:loginform.email,
     password:loginform.password
-  }).then(async(response)=>{
-    console.log(response.data.name);
-    const data ={
-      token:response.data.token,
-      id:response.data.id,
-      name:response.data.name
-  }
- 
-storeToken(data);
+  }).then((response)=>{
+  const{email,id,name,token}=response.data
+  const userData = { email, id, name, token };
+dispatch (storetoken(userData))
   navigate('/');
+
   }).catch((error)=>{
-    console.log(error);
-    setErrors(error.response.data);
+   console.log(error);
     
   })
 

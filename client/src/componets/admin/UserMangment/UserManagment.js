@@ -13,30 +13,22 @@ import axios from '../../../axios/axios.js'
 function UserManagment() {
   const [users, setUsers] = useState([]);
   const [search,setSearch]=useState('')
-  const navigate = useNavigate();
-  const auth = useSelector(state => state);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   const [BlockUsered,setBlockUser]=useState(false)
  const [UnBlockUsers,setUnblockUsers]=useState()
 
 
-if(auth.token.email){
-  console.log('authenticated');
-}
-
 
 
 
 useEffect(() => {
-  if (auth.token.token === '') {
-    navigate('/admin');
-  }else{
+ 
   axios.get('/admin/getUser').then((respose)=>{
 setUsers(respose.data.AllUsers)
     })
 
-  }
+  
 }, [])
 
 const onChangeHandler =(e)=>{
@@ -74,7 +66,6 @@ const unBlockUser=(async(userId)=>{
 await axios.post(`admin/unblockuser/${userId}`).then((response)=>{
  
 const unblock=response.data
-console.log('user unblock',unblock);
 setUnblockUsers(unblock)
 
 axios.get('/admin/getUser').then((respose)=>{
@@ -130,7 +121,7 @@ return(
       {obj.isBlocked ===true ?
       
       (
-        <td><button onClick={() => unBlockUser(obj._id)} className="btn btn-danger" >unblock</button></td>
+        <td><button onClick={() => unBlockUser(obj._id)} className="btn btn-warning" >unblock</button></td>
         
       ):(
         <td><button onClick={() => BlockUser(obj._id)} className="btn btn-danger" >Block</button></td>
@@ -165,6 +156,11 @@ return(
   </tbody>
 )
     })}
+      {filteredUsers.length === 0 && search !== "" && (
+          <div className='d-flex w-100'>
+            <h1 className='justify-content-center'>No result</h1>
+          </div>
+        )}
 
 </table>
 </div>

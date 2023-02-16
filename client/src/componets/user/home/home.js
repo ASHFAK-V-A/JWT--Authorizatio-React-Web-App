@@ -3,39 +3,45 @@ import { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Navbar, Nav, Button } from "react-bootstrap";
 import { useSelector } from 'react-redux';
+import { removetoken } from '../../../Redux/token/token';
 import { useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { useNavigate } from "react-router-dom";
-import {actionCreators} from '../../../state/index'
+
+
+
 function Home() {
 
-  const auth = useSelector(state => state);
+const Isauth= useSelector((state)=>state.token)
+console.log(Isauth);
+
+let IsUser="Logout"
+
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { removeToken } = bindActionCreators(actionCreators, dispatch);
+  const dispatch=useDispatch()
 
-let userNmae
 
-if(auth.token.name){
-userNmae="Logout"
-}else{
-  userNmae="login"
-}
 
 
 const LogoutHandler= () => {
-  const data = {
-    token: auth.token,
-    id: auth.id
+
+
+  let data ={
+    token:null,
+    id:null,
+    email:null,
+    name:null 
+
+     
   }
-  console.log(data);
-  removeToken(data);
+
+dispatch(removetoken(data))
   navigate('/login');
 }
 useEffect(() => {
-  if (auth.token.token === '') {
+  if (Isauth.token.token ===null) {
     navigate('/login');
   }
+
 }, [])
 
   return (
@@ -49,7 +55,7 @@ useEffect(() => {
     </div>
     <ul className="nav navbar-nav navbar-right">
       <Button>
-              <li><span onClick={LogoutHandler} className="glyphicon glyphicon-log-in text-white">{`${userNmae}`}</span></li>
+              <li><span onClick={LogoutHandler} className="glyphicon glyphicon-log-in text-white">{`${IsUser}`}</span></li>
           
         </Button>
     </ul>

@@ -3,22 +3,18 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { useState } from 'react'
 import axios from '../../../axios/axios'
 import { useNavigate } from 'react-router';
-import {bindActionCreators} from 'redux'
-import {actionCreators} from '../../../state/index'
-import { useSelector ,useDispatch} from 'react-redux';
+
+
 
 function Login() {
 
 
 
 
-    const auth = useSelector((state)=>state)
 
-    console.log("this is auth",auth);
- const dispatch=useDispatch()
+
 const navigate = useNavigate()
 
- const {storeToken} = bindActionCreators(actionCreators,dispatch);
 
 
 
@@ -41,19 +37,16 @@ const SubmitHandler=(async(e)=>{
     email:adminauth.email,
     password:adminauth.password 
   }).then(async(response)=>{
-    const data ={
-        token:response.data.token,
-        email:response.data.email
-    }
-    localStorage.setItem('token', response.data.token);
+    // const data ={
+    //     token:response.data.token,
+    //     email:response.data.email
+    // }
 
 
     
 
 
 
-
-storeToken(data);
     navigate('/admin/home');
 
   }).catch((error)=>{
