@@ -1,21 +1,32 @@
 import React from 'react'
 import { Navbar, Nav, Button } from "react-bootstrap";
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { removetoken } from '../../../Redux/token/token';
 function Adminhome() {
 
   const navigate = useNavigate();
 
-
+const dispatch=useDispatch()
 
 
   
 
-  const LogoutHandler= () => {
+
+    const LogoutHandler= () => {
 
 
+      let data ={
+        token:null,
+        id:null,
+        email:null,
+        name:null 
+      }
+  dispatch(removetoken(data))
+  navigate('/admin')
+    }
 
-  }
+  
 
 
   return (
@@ -28,7 +39,7 @@ function Adminhome() {
     </div>
     <ul className="nav navbar-nav navbar-right">
       <Button>
-              <li><span onClick={LogoutHandler} className="glyphicon glyphicon-log-in text-white"></span></li>
+              <li><span onClick={LogoutHandler} className="glyphicon glyphicon-log-in text-white">Logout</span></li>
         </Button>
     </ul>
   </div>

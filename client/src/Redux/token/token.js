@@ -16,16 +16,17 @@ token:""
 
         storetoken:(state,action)=>{
             const { email, id, name, token } = action.payload;
+            console.log(email,id,name,token);
             state.id=id;
             state.name=name;
             state.token=token;
             state.email=email
         },
         removetoken:(state,action)=>{
-         state.token=null;
-         state.id=null;
-         state.name=null;
-         state.email=null
+         state.token=""
+         state.id=""
+         state.name=""
+         state.email=""
         }
         
     } 

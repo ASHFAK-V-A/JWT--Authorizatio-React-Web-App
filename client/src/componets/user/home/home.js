@@ -4,45 +4,32 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { Navbar, Nav, Button } from "react-bootstrap";
 import { useSelector } from 'react-redux';
 import { removetoken } from '../../../Redux/token/token';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 
 
 
 function Home() {
 
-const Isauth= useSelector((state)=>state.token)
-console.log(Isauth);
+const Isauth= useSelector((state)=>state.token.token)
 
 let IsUser="Logout"
 
   const navigate = useNavigate();
-  const dispatch=useDispatch()
+
 
 
 
 
 const LogoutHandler= () => {
-
-
-  let data ={
-    token:null,
-    id:null,
-    email:null,
-    name:null 
-
-     
-  }
-
-dispatch(removetoken(data))
+removetoken()
   navigate('/login');
 }
-useEffect(() => {
-  if (Isauth.token.token ===null) {
-    navigate('/login');
-  }
 
-}, [])
+useEffect(() => {
+  if (Isauth==='') {
+  navigate('/login')
+  }
+},[])
 
   return (
     <div>

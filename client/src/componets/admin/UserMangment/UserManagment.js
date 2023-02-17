@@ -5,31 +5,44 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import axios from '../../../axios/axios.js'
-
-
-
+import Edituser from '../editUser/Edituser';
+ 
 
 
 function UserManagment() {
+
   const [users, setUsers] = useState([]);
   const [search,setSearch]=useState('')
-  const [filteredUsers, setFilteredUsers] = useState([]);
-
+  const [filteredUsers, setFilteredUsers] = useState([])
   const [BlockUsered,setBlockUser]=useState(false)
  const [UnBlockUsers,setUnblockUsers]=useState()
 
-
+const [showEditUser,setEditUser]=useState({
+  userId:null,
+  name:null,
+  email:null,
+  showEditUserPage:false
+})
+ const isAdmin=useSelector((state)=>state.token.token)
+ console.log("roken",isAdmin);
+const navigate=useNavigate()
 
 
 
 useEffect(() => {
- 
-  axios.get('/admin/getUser').then((respose)=>{
-setUsers(respose.data.AllUsers)
-    })
+if(isAdmin){
+ axios.get('/admin/getUser').then((respose)=>{
+  setUsers(respose.data.AllUsers)
+ })
+}else{
+  navigate('/admin')
+}
 
-  
-}, [])
+   
+
+
+
+},[])
 
 const onChangeHandler =(e)=>{
 const serchdata= e.target.value
@@ -76,13 +89,30 @@ axios.get('/admin/getUser').then((respose)=>{
 })
 
 
+const EditUser=(objId)=>{
+console.log(objId);
+ setEditUser({
+  userId:objId._id,
+  name:objId.name,
+  email:objId.email,
+  showEditUserPage:true
+ }) 
 
+ 
 
+}
 
+console.log(showEditUser.showEditUserPage);
 
   return (
     <div>
+
 <NavBar/>
+
+
+{showEditUser.showEditUserPage===false ?
+
+
 <div className="container "style={{marginTop:100}}>
   <div className="col-4 d-flex m-auto">
 
@@ -104,20 +134,23 @@ axios.get('/admin/getUser').then((respose)=>{
       <th scope="col">Email</th>
       <th scope="col">id</th>
       <th scope="col">Edit</th>
-      <th scope="col">Delete</th>
+      <th scope="col">Block user</th>
     </tr>
   </thead>
   
        { search === "" &&  users.map((obj,index) => {
+
 return(
+
+
   <tbody>
     <tr>
       <th scope="row">{index+1}</th>
       <td>{obj.name}</td>
-      <td>{obj.email}</td>
+      <td>{obj.email} {obj.isBlocked?<span className='text-danger fw-bolder ms-2 mt-1'>Blocked</span>:''}</td>
       <td>{obj._id}</td>
 
-      <td><button className='btn btn-primary'>Edit</button></td>
+      <td><button onClick={()=>EditUser(obj)} className='btn btn-primary'>Edit</button></td>
       {obj.isBlocked ===true ?
       
       (
@@ -128,14 +161,12 @@ return(
       )
       }
     
-
-   
-     
     </tr>
  
    
   </tbody>
 )
+
        
     })}
     
@@ -146,10 +177,17 @@ return(
     <tr>
       <th scope="row">{index+1}</th>
       <td>{obj.name}</td>
-      <td>{obj.email}</td>
+      <td>{obj.email} {obj.isBlocked?<span className='text-danger fw-bolder ms-2 mt-1'>Blocked</span>:''}</td>
       <td>{obj._id}</td>
-      <td><button className='btn btn-primary'>Edit</button></td>
-      <td><button className='btn btn-danger'>Delete</button></td>
+      {obj.isBlocked ===true ?
+      
+      (
+        <td><button onClick={() => unBlockUser(obj._id)} className="btn btn-warning" >unblock</button></td>
+        
+      ):(
+        <td><button onClick={() => BlockUser(obj._id)} className="btn btn-danger" >Block</button></td>
+      )
+      }
     </tr>
  
    
@@ -164,7 +202,10 @@ return(
 
 </table>
 </div>
+: <Edituser UserData={showEditUser} />} 
+
     </div>
+   
   )
 }
 
