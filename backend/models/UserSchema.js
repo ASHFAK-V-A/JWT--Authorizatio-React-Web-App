@@ -17,11 +17,6 @@ required:true
         type:String,
         required:true
     },
-
-    conformPassword:{
-        type:Number,
-
-    },
     isBlocked:{
         type:Boolean,
         default:false

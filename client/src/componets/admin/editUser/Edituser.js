@@ -1,18 +1,40 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import Navbar from '../NavBar/Navbar'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import axios from '../../../axios/axios'
 
-function Edituser({UserData}) {
 
+
+function Edituser({UserData,setTrue}) {
+  
+
+const [errors,setErrors] = useState({});
 let [NewName,setNewName]=useState('')
 
 
 const HandleSubmit=(e)=>{
+  console.log(e);
 e.preventDefault()
+axios.post('admin/edituser',{
+  name:NewName,
+  userId:UserData.userId
+}).then((response)=>{
+  console.log("user data here",response.data);
+  handleSetValue()
+}).catch((error)=>{
+  console.log(error.response.data);
+  setErrors(error.response.data); 
+
+})
 }
 
 
-console.log(NewName);
+
+
+const handleSetValue=()=>{
+  setTrue();
+}
+
   return (
     <div>
 
@@ -31,15 +53,17 @@ console.log(NewName);
         placeholder="Enter.."
          autoFocus="true"
          name='name'
+         required="true"
          value={NewName}
          onChange={(e)=>setNewName(e.target.value)}
       
        />
-
+  {errors && <p style={{color:"red"}}>{errors.email}</p>}
     </div>
+  
   </div>
   
-  <button className='btn btn-primary float-end mt-5'>Submit</button>
+  <button  className='btn btn-primary float-end mt-5'>Submit</button>
  </form> 
  <button className='btn btn-danger float-end mt-5 me-3'>Cancel</button>
   </div>

@@ -17,6 +17,8 @@ function UserManagment() {
   const [BlockUsered,setBlockUser]=useState(false)
  const [UnBlockUsers,setUnblockUsers]=useState()
 
+
+ 
 const [showEditUser,setEditUser]=useState({
   userId:null,
   name:null,
@@ -24,13 +26,16 @@ const [showEditUser,setEditUser]=useState({
   showEditUserPage:false
 })
  const isAdmin=useSelector((state)=>state.token.token)
- console.log("roken",isAdmin);
+ console.log("toke",isAdmin);
 const navigate=useNavigate()
 
 
 
+
+
 useEffect(() => {
-if(isAdmin){
+
+if(isAdmin ){
  axios.get('/admin/getUser').then((respose)=>{
   setUsers(respose.data.AllUsers)
  })
@@ -38,11 +43,9 @@ if(isAdmin){
   navigate('/admin')
 }
 
-   
+},[showEditUser])
 
 
-
-},[])
 
 const onChangeHandler =(e)=>{
 const serchdata= e.target.value
@@ -64,7 +67,6 @@ value.name.includes(search)
 const BlockUser=(async(userId)=>{
   await axios.post(`admin/blockuser/${userId}`).then((response)=>{
  const blockUser=response.data
- console.log('user block',blockUser);
   setBlockUser(blockUser)
   axios.get('/admin/getUser').then((respose)=>{
     setUsers(respose.data.AllUsers)
@@ -77,10 +79,8 @@ const BlockUser=(async(userId)=>{
 
 const unBlockUser=(async(userId)=>{
 await axios.post(`admin/unblockuser/${userId}`).then((response)=>{
- 
 const unblock=response.data
 setUnblockUsers(unblock)
-
 axios.get('/admin/getUser').then((respose)=>{
   setUsers(respose.data.AllUsers)
       })
@@ -90,7 +90,6 @@ axios.get('/admin/getUser').then((respose)=>{
 
 
 const EditUser=(objId)=>{
-console.log(objId);
  setEditUser({
   userId:objId._id,
   name:objId.name,
@@ -98,11 +97,21 @@ console.log(objId);
   showEditUserPage:true
  }) 
 
- 
+
 
 }
 
-console.log(showEditUser.showEditUserPage);
+const handleSetValue = () => {
+  setEditUser({
+    showEditUserPage:false
+    
+  });
+
+};
+
+
+
+console.log("userblocked",showEditUser.showEditUserPage);
 
   return (
     <div>
@@ -110,7 +119,7 @@ console.log(showEditUser.showEditUserPage);
 <NavBar/>
 
 
-{showEditUser.showEditUserPage===false ?
+
 
 
 <div className="container "style={{marginTop:100}}>
@@ -126,6 +135,7 @@ console.log(showEditUser.showEditUserPage);
   </div>
 
 <button className='btn btn-info float-end mt-5'>Add User</button>
+{showEditUser.showEditUserPage===false ?
 <table className="table "style={{marginTop:110}}>
   <thead className="thead-dark">
     <tr>
@@ -168,10 +178,12 @@ return(
 )
 
        
+
     })}
     
+
   
-    { search !== "" &&  filteredUsers.map((obj,index) => {
+{ search !== "" &&  filteredUsers.map((obj,index) => {
     return(
   <tbody>
     <tr>
@@ -179,7 +191,10 @@ return(
       <td>{obj.name}</td>
       <td>{obj.email} {obj.isBlocked?<span className='text-danger fw-bolder ms-2 mt-1'>Blocked</span>:''}</td>
       <td>{obj._id}</td>
+      
+      <td><button onClick={()=>EditUser(obj)} className='btn btn-primary'>Edit</button></td>
       {obj.isBlocked ===true ?
+
       
       (
         <td><button onClick={() => unBlockUser(obj._id)} className="btn btn-warning" >unblock</button></td>
@@ -193,6 +208,7 @@ return(
    
   </tbody>
 )
+
     })}
       {filteredUsers.length === 0 && search !== "" && (
           <div className='d-flex w-100'>
@@ -201,8 +217,9 @@ return(
         )}
 
 </table>
+: <Edituser  UserData={showEditUser} setTrue={handleSetValue}  />} 
 </div>
-: <Edituser UserData={showEditUser} />} 
+
 
     </div>
    

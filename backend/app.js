@@ -11,7 +11,7 @@ const app = express()
 dotenv.config()
 connectDB()
 
-app.use(logger("dev"))
+
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))

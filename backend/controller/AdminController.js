@@ -1,7 +1,11 @@
 
+
+
 import jwt from 'jsonwebtoken'
 import validateLoginInput from '../validatioin/login.js'
 import User from '../models/UserSchema.js';
+
+
 
 export const adminLoign=((req,res)=>{
     try{
@@ -29,12 +33,14 @@ if(email==process.env.ADMIN_EMAIL && password==process.env.ADMIN_PASSWORD){
     }
     )
 
+
 }else{
 
     errors.password = 'Invalid Email or Password ! Please try again.';
             return res.status(400).json(errors);
 
  }
+
 
     }catch(error){
 
@@ -43,6 +49,8 @@ if(email==process.env.ADMIN_EMAIL && password==process.env.ADMIN_PASSWORD){
 
     
 })
+
+
 
 export const getAllUser= (async(req,res)=>{
 try {
@@ -53,9 +61,12 @@ res.json({
    AllUsers:getAllUser
 })
 
+
 } catch (error) {
     console.log(error.message);
 }
+
+
 })
 
 
@@ -88,3 +99,32 @@ export const unblockuser=async(req,res)=>{
  console.log(error.message);        
     }
 }
+
+
+export const EditUser =((req,res)=>{
+
+ 
+const {name,userId}=req.body 
+
+  
+       User.findOne({_id:userId}).then((userdata)=>{
+          if(userdata.name===name){
+            console.log('name Aleredu exist');
+            return res.status(400).json({email:'Sorry this username is already taken !'})
+          }else {
+            User.findOneAndUpdate({_id: userId}, {name:name})
+            .then((updatedUser) => {
+        
+              res.json({
+                status:true,
+                usernameedited:updatedUser
+             })
+
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          }
+       })
+      
+    }) 
