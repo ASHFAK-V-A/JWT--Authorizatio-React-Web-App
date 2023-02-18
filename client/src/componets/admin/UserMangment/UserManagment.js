@@ -151,7 +151,7 @@ showEditUserPage:false
   <button className='btn btn-primary'>Search</button>  
   </div>
 
-<button className='btn btn-info float-end mt-5'>Add User</button>
+<button onClick={()=>navigate('/admin/adduser')} className='btn btn-info float-end mt-5'>Add User</button>
 
 {showEditUser.showEditUserPage===false ?
 <table className="table "style={{marginTop:110}}>
