@@ -52,7 +52,7 @@ const onChangeHandler =(e)=>{
   console.log('woprking');
 const serchdata= e.target.value
 setSearch(serchdata)
-if (serchdata !== "") {
+if (serchdata !== "") { 
 
 const newPacientes = users.filter((value) =>
 value.name.includes(search)
@@ -170,7 +170,7 @@ showEditUserPage:false
 
 return(
 
-
+ 
   <tbody>
     <tr>
       <th scope="row">{index+1}</th>
@@ -227,6 +227,7 @@ return(
    
   </tbody>
 )
+
 
     })}
       {filteredUsers.length === 0 && search !== "" && (
