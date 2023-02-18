@@ -65,7 +65,7 @@ const handleSetValue=()=>{
   
   <button  className='btn btn-primary float-end mt-5'>Submit</button>
  </form> 
- <button className='btn btn-danger float-end mt-5 me-3'>Cancel</button>
+ <button onClick={handleSetValue} className='btn btn-danger float-end mt-5 me-3'>Cancel</button>
   </div>
   
 

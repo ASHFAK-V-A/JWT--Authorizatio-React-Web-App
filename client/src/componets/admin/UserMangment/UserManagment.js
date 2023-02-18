@@ -14,6 +14,7 @@ function UserManagment() {
   const [users, setUsers] = useState([]);
   const [search,setSearch]=useState('')
   const [filteredUsers, setFilteredUsers] = useState([])
+ 
   const [BlockUsered,setBlockUser]=useState(false)
  const [UnBlockUsers,setUnblockUsers]=useState()
 
@@ -26,7 +27,6 @@ const [showEditUser,setEditUser]=useState({
   showEditUserPage:false
 })
  const isAdmin=useSelector((state)=>state.token.token)
- console.log("toke",isAdmin);
 const navigate=useNavigate()
 
 
@@ -47,46 +47,64 @@ if(isAdmin ){
 
 
 
+
+
 const onChangeHandler =(e)=>{
+  console.log('woprking');
 const serchdata= e.target.value
 setSearch(serchdata)
 if (serchdata !== "") {
 
-  const newPacientes = users.filter((value) =>
+const newPacientes = users.filter((value) =>
 value.name.includes(search)
-
   );
-
-  setFilteredUsers(newPacientes);
-
+  console.log("newPaticent",newPacientes);
+  setFilteredUsers(newPacientes)
+}
 }
 
-}
+
+
 
 
 const BlockUser=(async(userId)=>{
+  console.log('user block');
   await axios.post(`admin/blockuser/${userId}`).then((response)=>{
- const blockUser=response.data
-  setBlockUser(blockUser)
-  axios.get('/admin/getUser').then((respose)=>{
-    setUsers(respose.data.AllUsers)
-        })
+console.log(response);
+  setBlockUser((prev)=>{
+return{
+  ...prev,
+  [userId]:true
+}
+  })
+// axios.get('/admin/getUser').then((respose)=>{
+//     setUsers(respose.data.AllUsers)
+//         })
 
   })
 
 
 })
 
+
+
+
 const unBlockUser=(async(userId)=>{
+
+console.log('uswer cliked');
 await axios.post(`admin/unblockuser/${userId}`).then((response)=>{
 const unblock=response.data
-setUnblockUsers(unblock)
-axios.get('/admin/getUser').then((respose)=>{
-  setUsers(respose.data.AllUsers)
-      })
+setBlockUser((prev)=>{
 
+  return{
+    ...prev,
+    [userId]: false
+  }
 })
 })
+})
+
+
 
 
 const EditUser=(objId)=>{
@@ -102,8 +120,8 @@ const EditUser=(objId)=>{
 }
 
 const handleSetValue = () => {
-  setEditUser({
-    showEditUserPage:false
+setEditUser({
+showEditUserPage:false
     
   });
 
@@ -111,7 +129,6 @@ const handleSetValue = () => {
 
 
 
-console.log("userblocked",showEditUser.showEditUserPage);
 
   return (
     <div>
@@ -157,11 +174,11 @@ return(
     <tr>
       <th scope="row">{index+1}</th>
       <td>{obj.name}</td>
-      <td>{obj.email} {obj.isBlocked?<span className='text-danger fw-bolder ms-2 mt-1'>Blocked</span>:''}</td>
+      <td>{obj.email} {obj.isBlocked || BlockUsered[obj._id]? <span className='text-danger fw-bolder ms-2 mt-1'>Blocked</span>:''}</td>
       <td>{obj._id}</td>
 
       <td><button onClick={()=>EditUser(obj)} className='btn btn-primary'>Edit</button></td>
-      {obj.isBlocked ===true ?
+      {obj.isBlocked===true ||  BlockUsered[obj._id] ?
       
       (
         <td><button onClick={() => unBlockUser(obj._id)} className="btn btn-warning" >unblock</button></td>
@@ -189,12 +206,12 @@ return(
     <tr>
       <th scope="row">{index+1}</th>
       <td>{obj.name}</td>
-      <td>{obj.email} {obj.isBlocked?<span className='text-danger fw-bolder ms-2 mt-1'>Blocked</span>:''}</td>
+      <td>{obj.email}{obj.isBlocked || BlockUsered[obj._id]? <span className='text-danger fw-bolder ms-2 mt-1'>Blocked</span>:''} </td>
       <td>{obj._id}</td>
-      
-      <td><button onClick={()=>EditUser(obj)} className='btn btn-primary'>Edit</button></td>
-      {obj.isBlocked ===true ?
 
+
+      <td><button onClick={()=>EditUser(obj)} className='btn btn-primary'>Edit</button></td>
+      {obj.isBlocked===true ||  BlockUsered[obj._id]  ?
       
       (
         <td><button onClick={() => unBlockUser(obj._id)} className="btn btn-warning" >unblock</button></td>
