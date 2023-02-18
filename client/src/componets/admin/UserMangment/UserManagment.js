@@ -14,9 +14,8 @@ function UserManagment() {
   const [users, setUsers] = useState([]);
   const [search,setSearch]=useState('')
   const [filteredUsers, setFilteredUsers] = useState([])
- 
   const [BlockUsered,setBlockUser]=useState(false)
- const [UnBlockUsers,setUnblockUsers]=useState()
+
 
 
  
@@ -77,9 +76,9 @@ return{
   [userId]:true
 }
   })
-// axios.get('/admin/getUser').then((respose)=>{
-//     setUsers(respose.data.AllUsers)
-//         })
+axios.get('/admin/getUser').then((respose)=>{
+    setUsers(respose.data.AllUsers)
+        })
 
   })
 
@@ -90,17 +89,18 @@ return{
 
 
 const unBlockUser=(async(userId)=>{
-
 console.log('uswer cliked');
 await axios.post(`admin/unblockuser/${userId}`).then((response)=>{
 const unblock=response.data
 setBlockUser((prev)=>{
-
   return{
     ...prev,
     [userId]: false
   }
 })
+axios.get('/admin/getUser').then((respose)=>{
+  setUsers(respose.data.AllUsers)
+      })
 })
 })
 
@@ -212,6 +212,7 @@ return(
 
 
       <td><button onClick={()=>EditUser(obj)} className='btn btn-primary'>Edit</button></td>
+      
       {obj.isBlocked===true ||  BlockUsered[obj._id]  ?
       
       (
