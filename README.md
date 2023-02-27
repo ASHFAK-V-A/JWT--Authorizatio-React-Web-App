@@ -31,6 +31,7 @@ We can then access the token from the store to send it with each subsequent requ
 
 * User registration
 * User login
+* Validator for login and signup validation
 * JWT authentication
 * Axios HTTP requests for client-server communication
 * Hashed passwords using bcrypt
