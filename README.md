@@ -1,4 +1,4 @@
-# MERN Stack User Authentication Project with JWT Token
+# MERN Stack JWT TOKEN authentiaction Project 
 
 This is an extension of the basic MERN (MongoDB, Express, React, Node.js) stack project with user authentication using JWT (JSON Web Tokens),
 with an added admin panel feature. This project allows users to register, login, access protected routes once authenticated, 
